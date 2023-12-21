@@ -1,4 +1,4 @@
-type Product = {
+export type Product = {
   id: number;
   quantity: number;
 };
@@ -12,4 +12,5 @@ export type Input = {
 export type Output = {
   cartValue: number;
   transportFee: number;
+  orderCode: string
 };

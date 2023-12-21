@@ -1,4 +1,6 @@
+import { CodeGenerationSimple } from "../CodeGeneration";
 import { CouponDataDatabase } from "../CouponDataDatabase";
+import { OrderDataDatabase } from "../OrderDataDatabase";
 import { ProductDataDatabase } from "../ProductDataDatabase";
 import { Checkout } from "../application";
 import { Input } from "../interface";
@@ -27,10 +29,12 @@ process.stdin.on("data", async function (chunk) {
 
   if (command.startsWith("checkout")) {
     try {
-      const checkout = new Checkout(
-        new ProductDataDatabase(),
-        new CouponDataDatabase()
-      );
+    const checkout = new Checkout(
+      new ProductDataDatabase(),
+      new CouponDataDatabase(),
+      new OrderDataDatabase(),
+      new CodeGenerationSimple()
+    );
       const output = await checkout.execute(input);
       console.log(output);
     } catch (error: any) {
