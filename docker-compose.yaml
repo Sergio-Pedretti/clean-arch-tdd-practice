@@ -16,7 +16,8 @@ services:
       - "-c"
       - |
         /usr/local/bin/docker-entrypoint.sh postgres \
-        && psql -U sergiopedretti -d app -f /docker-entrypoint-initdb.d/create.sql
+        && psql -h localhost -p 5432 -U sergiopedretti -d app -f /docker-entrypoint-initdb.d/drop.sql
+        && psql -h localhost -p 5432 -U sergiopedretti -d app -f /docker-entrypoint-initdb.d/create.sql
     ports:
       - "5432:5432"
 

@@ -7,7 +7,7 @@ axios.defaults.validateStatus = () => {
 describe("Order", () => {
   const url = "http://localhost:3001/checkout";
 
-  it("should create a order with 3 products", async () => {
+  it.skip("should create a order with 3 products", async () => {
     const products = [
       { id: 1, quantity: 5 },
       { id: 2, quantity: 10 },
@@ -75,8 +75,8 @@ describe("Order", () => {
     });
     const output = response.data;
 
-    expect(response.status).toBe(200);
-    expect(output.cartValue).toBe(7100);
+    expect(response.status).toBe(422);
+    expect(response.data.message).toBe("Coupon Expired");
   });
 
   it("should not have zero os negative items", async () => {

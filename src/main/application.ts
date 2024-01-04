@@ -81,8 +81,9 @@ export class Checkout {
 
     const code = await this.codeGeneration.generate()
 
-    await this.orderData.saveOrder({
+    await this.orderData.save({
       code,
+      cpf,
       totalValue,
       transportFee,
       products
