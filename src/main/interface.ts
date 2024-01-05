@@ -12,5 +12,5 @@ export type Input = {
 export type Output = {
   cartValue: number;
   transportFee: number;
-  orderCode: string
+  code: string
 };
