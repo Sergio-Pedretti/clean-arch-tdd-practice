@@ -4,7 +4,6 @@ import { Input } from "../interface";
 import { ProductDataDatabase } from "../ProductDataDatabase";
 import { CouponDataDatabase } from "../CouponDataDatabase";
 import { OrderDataDatabase } from "../OrderDataDatabase";
-import { CodeGenerationSimple } from "../CodeGeneration";
 
 const app = express();
 app.use(express.json());
@@ -17,7 +16,6 @@ app.post("/checkout", async (req, res) => {
       new ProductDataDatabase(),
       new CouponDataDatabase(),
       new OrderDataDatabase(),
-      new CodeGenerationSimple()
     );
     const output = await checkout.execute(input);
     res.json(output);

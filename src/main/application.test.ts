@@ -1,4 +1,3 @@
-import { CodeGeneration, CodeGenerationSimple } from "./CodeGeneration";
 import { CouponData } from "./CouponData";
 import { CurrencyGateway } from "./CurrencyGateway";
 import { OrderData } from "./OrderData";
@@ -8,14 +7,13 @@ import { Checkout } from "./application";
 
 jest.mock("./CurrencyGateway.ts");
 
-describe.skip("Checkout", () => {
+describe("Checkout", () => {
     let productDatabase: ProductData
 
     let couponDatabase: CouponData
 
     let orderDatabase: OrderData
 
-    let codeGeneration: CodeGeneration
   beforeEach(() => {
     productDatabase = {
       async getProduct(id) {
@@ -93,7 +91,6 @@ describe.skip("Checkout", () => {
     };
     orderDatabase = new OrderDataDatabase();
     
-    codeGeneration = new CodeGenerationSimple()
     jest.clearAllMocks();
     jest.resetAllMocks();
   });
@@ -117,7 +114,7 @@ describe.skip("Checkout", () => {
       USD: 3,
     });
 
-    const checkout = new Checkout(productDatabase, couponDatabase, orderDatabase, codeGeneration);
+    const checkout = new Checkout(productDatabase, couponDatabase, orderDatabase);
     const output = await checkout.execute(input);
 
     expect(output.cartValue).toBe(7250);
@@ -142,9 +139,35 @@ describe.skip("Checkout", () => {
       USD: 3,
     });
 
-    const checkout = new Checkout(productDatabase, couponDatabase, orderDatabase, codeGeneration);
+    const checkout = new Checkout(productDatabase, couponDatabase, orderDatabase);
     const output = await checkout.execute(input);
 
     expect(output.cartValue).toBe(7100);
+  });
+
+    it("should create a order with 3 products with order code", async () => {
+    const input = {
+      cpf: "657.491.560-01",
+      products: [
+        { id: 1, quantity: 5 },
+        { id: 2, quantity: 10 },
+        { id: 3, quantity: 2 },
+      ],
+    }; 
+
+    const currencyGatewayStub = CurrencyGateway as jest.MockedClass<
+      typeof CurrencyGateway
+    >;
+    currencyGatewayStub.prototype.getCurrency.mockResolvedValue({
+      BRL: 1,
+      USD: 3,
+    });
+
+    orderDatabase.getSequence = jest.fn().mockResolvedValue(0);
+
+    const checkout = new Checkout(productDatabase, couponDatabase, orderDatabase);
+    const output = await checkout.execute(input);
+
+    expect(output.code).toBe("202400000001");
   });
 });

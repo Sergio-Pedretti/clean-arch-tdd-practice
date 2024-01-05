@@ -4,7 +4,6 @@ import { Input } from "../interface";
 import { ProductDataDatabase } from "../ProductDataDatabase";
 import { CouponDataDatabase } from "../CouponDataDatabase";
 import { OrderDataDatabase } from "../OrderDataDatabase";
-import { CodeGenerationSimple } from "../CodeGeneration";
 
 async function init() {
   const rabbitConnection = await amqp.connect("amqp://localhost");
@@ -18,7 +17,6 @@ async function init() {
       new ProductDataDatabase(),
       new CouponDataDatabase(),
       new OrderDataDatabase(),
-      new CodeGenerationSimple()
     );
       const output = await checkout.execute(input);
       console.log(output);

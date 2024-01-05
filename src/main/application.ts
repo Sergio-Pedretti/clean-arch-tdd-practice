@@ -1,5 +1,4 @@
 import { validate } from "../utils/validateCPF";
-import { CodeGeneration } from "./CodeGeneration";
 import { CouponData } from "./CouponData";
 import { CurrencyGateway } from "./CurrencyGateway";
 import { OrderData } from "./OrderData";
@@ -14,7 +13,6 @@ export class Checkout {
     readonly productData: ProductData,
     readonly couponData: CouponData,
     readonly orderData: OrderData,
-    readonly codeGeneration: CodeGeneration
   ) {}
 
   async execute(input: Input): Promise<Output> {
@@ -79,7 +77,10 @@ export class Checkout {
       transportFee = MIN_FEE;
     }
 
-    const code = await this.codeGeneration.generate()
+    const year = new Date().getFullYear()
+    const sequence = await this.orderData.getSequence();
+    const code = `${year}${String(sequence+1).padStart(8,'0')}`;
+
 
     await this.orderData.save({
       code,
@@ -92,7 +93,7 @@ export class Checkout {
     return {
       cartValue: totalValue,
       transportFee,
-      orderCode: code,
+      code,
     };
   }
 }

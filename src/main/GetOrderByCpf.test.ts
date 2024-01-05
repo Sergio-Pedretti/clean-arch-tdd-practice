@@ -1,4 +1,3 @@
-import { CodeGenerationSimple } from "./CodeGeneration"
 import { CouponDataDatabase } from "./CouponDataDatabase"
 import { GetOrderByCpf } from "./GetOrderByCpf"
 import { OrderDataDatabase } from "./OrderDataDatabase"
@@ -10,8 +9,7 @@ describe('GetOrderByCPF', () => {
     const productData = new ProductDataDatabase()
     const couponData = new CouponDataDatabase()
     const orderData = new OrderDataDatabase()
-    const codeGeneration = new CodeGenerationSimple()
-    const checkout = new Checkout(productData, couponData, orderData, codeGeneration)
+    const checkout = new Checkout(productData, couponData, orderData)
     const input = {
       cpf: "657.491.560-01",
       products: [
