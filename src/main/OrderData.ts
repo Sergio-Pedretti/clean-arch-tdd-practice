@@ -17,4 +17,5 @@ export namespace OrderData {
 export interface OrderData {
     save: (input: OrderData.Input) => Promise<void>
     getByCpf: (input: string) => Promise<OrderData.Output>
+    getSequence: () => Promise<number>
 }

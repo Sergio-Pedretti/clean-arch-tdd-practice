@@ -29,4 +29,12 @@ export class OrderDataDatabase extends Database implements OrderData {
             totalValue: total.totalvalue
         }
     }
+
+    async getSequence(): Promise<number> {
+         this.openConnection();
+        const [options] = await this.connection.query(
+          "SELECT COUNT(*)::integer as count FROM branas_store.orders")
+        await this.closeConnection();
+        return options.count;
+    }
 }
