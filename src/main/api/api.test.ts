@@ -7,7 +7,7 @@ axios.defaults.validateStatus = () => {
 describe("Order", () => {
   const url = "http://localhost:3001/checkout";
 
-  it.skip("should create a order with 3 products", async () => {
+  it("should create a order with 3 products", async () => {
     const products = [
       { id: 1, quantity: 5 },
       { id: 2, quantity: 10 },
