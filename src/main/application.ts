@@ -3,10 +3,9 @@ import { CouponData } from "./CouponData";
 import { CurrencyGateway } from "./CurrencyGateway";
 import { OrderData } from "./OrderData";
 import { ProductData } from "./ProductData";
+import { TransportFeeCalculator } from "./TransportFeeCalculator";
+import { ValidateCoupon } from "./ValidateCoupon";
 import { Input, Output } from "./interface";
-
-const MIN_FEE = 10;
-const DISTANCE = 1000;
 
 export class Checkout {
   constructor(
@@ -34,18 +33,7 @@ export class Checkout {
     if (uniqueProducts.size < products.length) {
       throw new Error("Reapeted Items");
     }
-    let discount = 0;
-    if (coupon) {
-      const myCoupon = await this.couponData.getCoupon(coupon);
-
-      const now = new Date();
-      const expiredDate = new Date(myCoupon.expiresin);
-
-      if (expiredDate < now) 
-      throw new Error("Coupon Expired");
-      discount = myCoupon.percentage / 100;
-
-    }
+   
 
     let totalValue = 0;
     let transportFee = 0;
@@ -69,13 +57,20 @@ export class Checkout {
           parseInt(myProduct.price) *
           currencies[myProduct.currency] *
           product.quantity;
-        transportFee += DISTANCE * (myProduct.weight / 100);
+        transportFee += TransportFeeCalculator.calculate(myProduct)
       }
     }
-    totalValue -= totalValue * discount;
-    if (transportFee < MIN_FEE) {
-      transportFee = MIN_FEE;
+    let discount = 0;
+     if (coupon) {
+      const validateCoupon = new ValidateCoupon(this.couponData);
+      const {isExpired, discount: validateDiscount} = await validateCoupon.validate(coupon, totalValue);
+
+      if (isExpired) 
+      throw new Error("Coupon Expired");
+
+      discount = validateDiscount;
     }
+    totalValue -= discount;
 
     const year = new Date().getFullYear()
     const sequence = await this.orderData.getSequence();
